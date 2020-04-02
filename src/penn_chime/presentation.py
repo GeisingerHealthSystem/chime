@@ -21,7 +21,7 @@ from .models import SimSirModel as Model
 
 hide_menu_style = """
         <style>
-        #MainMenu {visibility: hidden;}
+        # MainMenu {visibility: hidden;}
         </style>
         """
 
@@ -174,110 +174,211 @@ def display_sidebar(st, d: Parameters) -> Parameters:
     # these functions create input elements and bind the values they are set to
     # to the variables they are set equal to
     # it's kindof like ember or angular if you are familiar with those
-
     st_obj = st.sidebar
-    current_hospitalized_input = NumberInput(
+    uploaded_file = st.file_uploader("Choose a XLSX file", type="xlsx")
+    if uploaded_file:
+        df=pd.read_excel(uploaded_file)
+        current_hospitalized_input =NumberInput(
+        st_obj,
+        "Currently Hospitalized COVID-19 Patients",
+        min_value=0,
+        value=df["Val"][3],
+        step=1,
+        format="%i",
+        )
+        n_days_input = NumberInput(
+        st_obj,
+        "Number of days to project",
+        min_value=30,
+        value=df["Val"][2],
+        step=1,
+        format="%i",
+        )
+        doubling_time_input = NumberInput(
+        st_obj,
+        "Doubling time in days (up to today)",
+        min_value=1,
+        value=df["Val"][4],
+        step=1,
+        format="%i",
+        )
+        current_date_input = DateInput(
+        st_obj, "Current date (Default is today)", value=d.current_date,
+        )
+        date_first_hospitalized_input = DateInput(
+        st_obj, "Date of first hospitalized case - Enter this date to have chime estimate the initial doubling time",
+        value=d.date_first_hospitalized,
+        )
+        relative_contact_pct_input = PercentInput(
+        st_obj,
+        "Social distancing (% reduction in social contact going forward)",
+        min_value=0.0,
+        max_value=100.0,
+        value=df["Val"][5],
+        step=1.0,
+        )
+        hospitalized_pct_input = PercentInput(
+        st_obj, "Hospitalization %(total infections)", value=df["Val"][6],
+        )
+        icu_pct_input = PercentInput(st_obj,
+        "ICU %(total infections)",
+        min_value=0.0,
+        value=df["Val"][7],
+        step=0.05
+        )
+        ventilated_pct_input = PercentInput(
+        st_obj, "Ventilated %(total infections)", value=df["Val"][8],
+        )
+        hospitalized_days_input = NumberInput(
+        st_obj,
+        "Average Hospital Length of Stay (days)",
+        min_value=0,
+        value=df["Val"][9],
+        step=1,
+        format="%i",
+        )
+        icu_days_input = NumberInput(
+        st_obj,
+        "Average Days in ICU",
+        min_value=0,
+        value=df["Val"][10],
+        step=1,
+        format="%i",
+        )
+        ventilated_days_input = NumberInput(
+        st_obj,
+        "Average Days on Ventilator",
+        min_value=0,
+        value=df["Val"][11],
+        step=1,
+        format="%i",
+        )
+        market_share_pct_input = PercentInput(
+        st_obj,
+        "Hospital Market Share (%)",
+        min_value=0.5,
+        value=df["Val"][12],
+        )
+        population_input = NumberInput(
+        st_obj,
+        "Regional Population",
+        min_value=1,
+        value=(df["Val"][13]),
+        step=1,
+        format="%i",
+        )
+        #df["Val"][13]
+        infectious_days_input = NumberInput(
+        st_obj,
+        "Infectious Days",
+        min_value=0,
+        value=df["Val"][14],
+        step=1,
+        format="%i",
+        )
+    else:
+        current_hospitalized_input = NumberInput(
         st_obj,
         "Currently Hospitalized COVID-19 Patients",
         min_value=0,
         value=d.current_hospitalized,
         step=1,
         format="%i",
-    )
-    n_days_input = NumberInput(
+        )
+        n_days_input = NumberInput(
         st_obj,
         "Number of days to project",
         min_value=30,
         value=d.n_days,
         step=1,
         format="%i",
-    )
-    doubling_time_input = NumberInput(
+        )
+        doubling_time_input = NumberInput(
         st_obj,
         "Doubling time in days (up to today)",
         min_value=0.5,
         value=d.doubling_time,
         step=0.25,
         format="%f",
-    )
-    current_date_input = DateInput(
+        )
+        current_date_input = DateInput(
         st_obj, "Current date (Default is today)", value=d.current_date,
-    )
-    date_first_hospitalized_input = DateInput(
+        )
+        date_first_hospitalized_input = DateInput(
         st_obj, "Date of first hospitalized case - Enter this date to have chime estimate the initial doubling time",
         value=d.date_first_hospitalized,
-    )
-    relative_contact_pct_input = PercentInput(
+        )
+        relative_contact_pct_input = PercentInput(
         st_obj,
         "Social distancing (% reduction in social contact going forward)",
         min_value=0.0,
         max_value=100.0,
         value=d.relative_contact_rate,
         step=1.0,
-    )
-    hospitalized_pct_input = PercentInput(
+        )
+        hospitalized_pct_input = PercentInput(
         st_obj, "Hospitalization %(total infections)", value=d.hospitalized.rate,
-    )
-    icu_pct_input = PercentInput(st_obj,
+        )
+        icu_pct_input = PercentInput(st_obj,
         "ICU %(total infections)",
         min_value=0.0,
         value=d.icu.rate,
         step=0.05
-    )
-    ventilated_pct_input = PercentInput(
+        )
+        ventilated_pct_input = PercentInput(
         st_obj, "Ventilated %(total infections)", value=d.ventilated.rate,
-    )
-    hospitalized_days_input = NumberInput(
+        )
+        hospitalized_days_input = NumberInput(
         st_obj,
         "Average Hospital Length of Stay (days)",
         min_value=0,
         value=d.hospitalized.days,
         step=1,
         format="%i",
-    )
-    icu_days_input = NumberInput(
+        )
+        icu_days_input = NumberInput(
         st_obj,
         "Average Days in ICU",
         min_value=0,
         value=d.icu.days,
         step=1,
         format="%i",
-    )
-    ventilated_days_input = NumberInput(
+        )
+        ventilated_days_input = NumberInput(
         st_obj,
         "Average Days on Ventilator",
         min_value=0,
         value=d.ventilated.days,
         step=1,
         format="%i",
-    )
-    market_share_pct_input = PercentInput(
+        )
+        market_share_pct_input = PercentInput(
         st_obj,
         "Hospital Market Share (%)",
         min_value=0.5,
         value=d.market_share,
-    )
-    population_input = NumberInput(
+        )
+        population_input = NumberInput(
         st_obj,
         "Regional Population",
         min_value=1,
         value=(d.population),
         step=1,
         format="%i",
-    )
-    infectious_days_input = NumberInput(
+        )
+        infectious_days_input = NumberInput(
         st_obj,
         "Infectious Days",
         min_value=0,
         value=d.infectious_days,
         step=1,
         format="%i",
-    )
+        )
     max_y_axis_set_input = CheckboxInput(
-        st_obj, "Set the Y-axis on graphs to a static value"
+    st_obj, "Set the Y-axis on graphs to a static value"
     )
     max_y_axis_input = NumberInput(
-        st_obj, "Y-axis static value", value=500, format="%i", step=25
+    st_obj, "Y-axis static value", value=500, format="%i", step=25
     )
 
     # Build in desired order
@@ -382,7 +483,7 @@ The epidemic proceeds via a growth and decline process. This is the core model o
 To do this, we use a combination of estimates from other locations, informed estimates based on logical reasoning, and best guesses from the American Hospital Association.
 
 
-### Parameters
+# Parameters
 
 The model's parameters, $\\beta$ and $\\gamma$, determine the virulence of the epidemic.
 
@@ -414,7 +515,7 @@ $R_0$ gets bigger when
 
 A doubling time of {doubling_time} days and a recovery time of {recovery_days} days imply an $R_0$ of {r_naught:.2f}.
 
-#### Effect of social distancing
+# Effect of social distancing
 
 After the beginning of the outbreak, actions to reduce social contact will lower the parameter $c$.  If this happens at
 time $t$, then the number of people infected by any given infected person is $R_t$, which will be lower than $R_0$.
@@ -422,7 +523,7 @@ time $t$, then the number of people infected by any given infected person is $R_
 A {relative_contact_rate:.0%} reduction in social contact would increase the time it takes for the outbreak to double,
 to {doubling_time_t:.2f} days from {doubling_time:.2f} days, with a $R_t$ of {r_t:.2f}.
 
-#### Using the model
+# Using the model
 
 We need to express the two parameters $\\beta$ and $\\gamma$ in terms of quantities we can estimate.
 
@@ -445,7 +546,7 @@ We need to express the two parameters $\\beta$ and $\\gamma$ in terms of quantit
 $$\\beta = (g + \\gamma)$$.
 
 
-### Initial Conditions
+# Initial Conditions
 
 - {notes} \n
 """.format(

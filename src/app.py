@@ -2,6 +2,7 @@
 
 import altair as alt  # type: ignore
 import streamlit as st  # type: ignore
+import pandas as pd
 
 from penn_chime.presentation import (
     display_download_link,
