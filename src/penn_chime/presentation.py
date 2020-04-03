@@ -6,6 +6,8 @@ from datetime import date
 import altair as alt
 import numpy as np
 import pandas as pd
+import io
+import base64
 
 from .constants import (
     CHANGE_DATE,
@@ -175,205 +177,205 @@ def display_sidebar(st, d: Parameters) -> Parameters:
     # to the variables they are set equal to
     # it's kindof like ember or angular if you are familiar with those
     st_obj = st.sidebar
-    uploaded_file = st.file_uploader("Choose a XLSX file", type="xlsx")
-    if uploaded_file:
-        df=pd.read_excel(uploaded_file)
-        current_hospitalized_input =NumberInput(
-        st_obj,
-        "Currently Hospitalized COVID-19 Patients",
-        min_value=0,
-        value=df["Val"][3],
-        step=1,
-        format="%i",
-        )
-        n_days_input = NumberInput(
-        st_obj,
-        "Number of days to project",
-        min_value=30,
-        value=df["Val"][2],
-        step=1,
-        format="%i",
-        )
-        doubling_time_input = NumberInput(
-        st_obj,
-        "Doubling time in days (up to today)",
-        min_value=1,
-        value=df["Val"][4],
-        step=1,
-        format="%i",
-        )
-        current_date_input = DateInput(
-        st_obj, "Current date (Default is today)", value=d.current_date,
-        )
-        date_first_hospitalized_input = DateInput(
-        st_obj, "Date of first hospitalized case - Enter this date to have chime estimate the initial doubling time",
-        value=d.date_first_hospitalized,
-        )
-        relative_contact_pct_input = PercentInput(
-        st_obj,
-        "Social distancing (% reduction in social contact going forward)",
-        min_value=0.0,
-        max_value=100.0,
-        value=df["Val"][5],
-        step=1.0,
-        )
-        hospitalized_pct_input = PercentInput(
-        st_obj, "Hospitalization %(total infections)", value=df["Val"][6],
-        )
-        icu_pct_input = PercentInput(st_obj,
-        "ICU %(total infections)",
-        min_value=0.0,
-        value=df["Val"][7],
-        step=0.05
-        )
-        ventilated_pct_input = PercentInput(
-        st_obj, "Ventilated %(total infections)", value=df["Val"][8],
-        )
-        hospitalized_days_input = NumberInput(
-        st_obj,
-        "Average Hospital Length of Stay (days)",
-        min_value=0,
-        value=df["Val"][9],
-        step=1,
-        format="%i",
-        )
-        icu_days_input = NumberInput(
-        st_obj,
-        "Average Days in ICU",
-        min_value=0,
-        value=df["Val"][10],
-        step=1,
-        format="%i",
-        )
-        ventilated_days_input = NumberInput(
-        st_obj,
-        "Average Days on Ventilator",
-        min_value=0,
-        value=df["Val"][11],
-        step=1,
-        format="%i",
-        )
-        market_share_pct_input = PercentInput(
-        st_obj,
-        "Hospital Market Share (%)",
-        min_value=0.5,
-        value=df["Val"][12],
-        )
-        population_input = NumberInput(
-        st_obj,
-        "Regional Population",
-        min_value=1,
-        value=(df["Val"][13]),
-        step=1,
-        format="%i",
-        )
-        #df["Val"][13]
-        infectious_days_input = NumberInput(
-        st_obj,
-        "Infectious Days",
-        min_value=0,
-        value=df["Val"][14],
-        step=1,
-        format="%i",
-        )
-    else:
-        current_hospitalized_input = NumberInput(
-        st_obj,
-        "Currently Hospitalized COVID-19 Patients",
-        min_value=0,
-        value=d.current_hospitalized,
-        step=1,
-        format="%i",
-        )
-        n_days_input = NumberInput(
-        st_obj,
-        "Number of days to project",
-        min_value=30,
-        value=d.n_days,
-        step=1,
-        format="%i",
-        )
-        doubling_time_input = NumberInput(
-        st_obj,
-        "Doubling time in days (up to today)",
-        min_value=0.5,
-        value=d.doubling_time,
-        step=0.25,
-        format="%f",
-        )
-        current_date_input = DateInput(
-        st_obj, "Current date (Default is today)", value=d.current_date,
-        )
-        date_first_hospitalized_input = DateInput(
-        st_obj, "Date of first hospitalized case - Enter this date to have chime estimate the initial doubling time",
-        value=d.date_first_hospitalized,
-        )
-        relative_contact_pct_input = PercentInput(
-        st_obj,
-        "Social distancing (% reduction in social contact going forward)",
-        min_value=0.0,
-        max_value=100.0,
-        value=d.relative_contact_rate,
-        step=1.0,
-        )
-        hospitalized_pct_input = PercentInput(
-        st_obj, "Hospitalization %(total infections)", value=d.hospitalized.rate,
-        )
-        icu_pct_input = PercentInput(st_obj,
-        "ICU %(total infections)",
-        min_value=0.0,
-        value=d.icu.rate,
-        step=0.05
-        )
-        ventilated_pct_input = PercentInput(
-        st_obj, "Ventilated %(total infections)", value=d.ventilated.rate,
-        )
-        hospitalized_days_input = NumberInput(
-        st_obj,
-        "Average Hospital Length of Stay (days)",
-        min_value=0,
-        value=d.hospitalized.days,
-        step=1,
-        format="%i",
-        )
-        icu_days_input = NumberInput(
-        st_obj,
-        "Average Days in ICU",
-        min_value=0,
-        value=d.icu.days,
-        step=1,
-        format="%i",
-        )
-        ventilated_days_input = NumberInput(
-        st_obj,
-        "Average Days on Ventilator",
-        min_value=0,
-        value=d.ventilated.days,
-        step=1,
-        format="%i",
-        )
-        market_share_pct_input = PercentInput(
-        st_obj,
-        "Hospital Market Share (%)",
-        min_value=0.5,
-        value=d.market_share,
-        )
-        population_input = NumberInput(
-        st_obj,
-        "Regional Population",
-        min_value=1,
-        value=(d.population),
-        step=1,
-        format="%i",
-        )
-        infectious_days_input = NumberInput(
-        st_obj,
-        "Infectious Days",
-        min_value=0,
-        value=d.infectious_days,
-        step=1,
-        format="%i",
-        )
+    # uploaded_file = st.file_uploader("Choose a XLSX file", type="xlsx")
+    # if uploaded_file:
+    #     df=pd.read_excel(uploaded_file)
+    #     current_hospitalized_input =NumberInput(
+    #     st_obj,
+    #     "Currently Hospitalized COVID-19 Patients",
+    #     min_value=0,
+    #     value=df["Val"][3],
+    #     step=1,
+    #     format="%i",
+    #     )
+    #     n_days_input = NumberInput(
+    #     st_obj,
+    #     "Number of days to project",
+    #     min_value=30,
+    #     value=df["Val"][2],
+    #     step=1,
+    #     format="%i",
+    #     )
+    #     doubling_time_input = NumberInput(
+    #     st_obj,
+    #     "Doubling time in days (up to today)",
+    #     min_value=1,
+    #     value=df["Val"][4],
+    #     step=1,
+    #     format="%i",
+    #     )
+    #     current_date_input = DateInput(
+    #     st_obj, "Current date (Default is today)", value=d.current_date,
+    #     )
+    #     date_first_hospitalized_input = DateInput(
+    #     st_obj, "Date of first hospitalized case - Enter this date to have chime estimate the initial doubling time",
+    #     value=d.date_first_hospitalized,
+    #     )
+    #     relative_contact_pct_input = PercentInput(
+    #     st_obj,
+    #     "Social distancing (% reduction in social contact going forward)",
+    #     min_value=0.0,
+    #     max_value=100.0,
+    #     value=df["Val"][5],
+    #     step=1.0,
+    #     )
+    #     hospitalized_pct_input = PercentInput(
+    #     st_obj, "Hospitalization %(total infections)", value=df["Val"][6],
+    #     )
+    #     icu_pct_input = PercentInput(st_obj,
+    #     "ICU %(total infections)",
+    #     min_value=0.0,
+    #     value=df["Val"][7],
+    #     step=0.05
+    #     )
+    #     ventilated_pct_input = PercentInput(
+    #     st_obj, "Ventilated %(total infections)", value=df["Val"][8],
+    #     )
+    #     hospitalized_days_input = NumberInput(
+    #     st_obj,
+    #     "Average Hospital Length of Stay (days)",
+    #     min_value=0,
+    #     value=df["Val"][9],
+    #     step=1,
+    #     format="%i",
+    #     )
+    #     icu_days_input = NumberInput(
+    #     st_obj,
+    #     "Average Days in ICU",
+    #     min_value=0,
+    #     value=df["Val"][10],
+    #     step=1,
+    #     format="%i",
+    #     )
+    #     ventilated_days_input = NumberInput(
+    #     st_obj,
+    #     "Average Days on Ventilator",
+    #     min_value=0,
+    #     value=df["Val"][11],
+    #     step=1,
+    #     format="%i",
+    #     )
+    #     market_share_pct_input = PercentInput(
+    #     st_obj,
+    #     "Hospital Market Share (%)",
+    #     min_value=0.5,
+    #     value=df["Val"][12],
+    #     )
+    #     population_input = NumberInput(
+    #     st_obj,
+    #     "Regional Population",
+    #     min_value=1,
+    #     value=(df["Val"][13]),
+    #     step=1,
+    #     format="%i",
+    #     )
+    #     #df["Val"][13]
+    #     infectious_days_input = NumberInput(
+    #     st_obj,
+    #     "Infectious Days",
+    #     min_value=0,
+    #     value=df["Val"][14],
+    #     step=1,
+    #     format="%i",
+    #     )
+    # else:
+    current_hospitalized_input = NumberInput(
+    st_obj,
+    "Currently Hospitalized COVID-19 Patients",
+    min_value=0,
+    value=d.current_hospitalized,
+    step=1,
+    format="%i",
+    )
+    n_days_input = NumberInput(
+    st_obj,
+    "Number of days to project",
+    min_value=30,
+    value=d.n_days,
+    step=1,
+    format="%i",
+    )
+    doubling_time_input = NumberInput(
+    st_obj,
+    "Doubling time in days (up to today)",
+    min_value=0.5,
+    value=d.doubling_time,
+    step=0.25,
+    format="%f",
+    )
+    current_date_input = DateInput(
+    st_obj, "Current date (Default is today)", value=d.current_date,
+    )
+    date_first_hospitalized_input = DateInput(
+    st_obj, "Date of first hospitalized case - Enter this date to have chime estimate the initial doubling time",
+    value=d.date_first_hospitalized,
+    )
+    relative_contact_pct_input = PercentInput(
+    st_obj,
+    "Social distancing (% reduction in social contact going forward)",
+    min_value=0.0,
+    max_value=100.0,
+    value=d.relative_contact_rate,
+    step=1.0,
+    )
+    hospitalized_pct_input = PercentInput(
+    st_obj, "Hospitalization %(total infections)", value=d.hospitalized.rate,
+    )
+    icu_pct_input = PercentInput(st_obj,
+    "ICU %(total infections)",
+    min_value=0.0,
+    value=d.icu.rate,
+    step=0.05
+    )
+    ventilated_pct_input = PercentInput(
+    st_obj, "Ventilated %(total infections)", value=d.ventilated.rate,
+    )
+    hospitalized_days_input = NumberInput(
+    st_obj,
+    "Average Hospital Length of Stay (days)",
+    min_value=0,
+    value=d.hospitalized.days,
+    step=1,
+    format="%i",
+    )
+    icu_days_input = NumberInput(
+    st_obj,
+    "Average Days in ICU",
+    min_value=0,
+    value=d.icu.days,
+    step=1,
+    format="%i",
+    )
+    ventilated_days_input = NumberInput(
+    st_obj,
+    "Average Days on Ventilator",
+    min_value=0,
+    value=d.ventilated.days,
+    step=1,
+    format="%i",
+    )
+    market_share_pct_input = PercentInput(
+    st_obj,
+    "Hospital Market Share (%)",
+    min_value=0.5,
+    value=d.market_share,
+    )
+    population_input = NumberInput(
+    st_obj,
+    "Regional Population",
+    min_value=1,
+    value=(d.population),
+    step=1,
+    format="%i",
+    )
+    infectious_days_input = NumberInput(
+    st_obj,
+    "Infectious Days",
+    min_value=0,
+    value=d.infectious_days,
+    step=1,
+    format="%i",
+    )
     max_y_axis_set_input = CheckboxInput(
     st_obj, "Set the Y-axis on graphs to a static value"
     )
@@ -584,6 +586,45 @@ def display_download_link(st, filename: str, df: pd.DataFrame):
         <a download="{filename}" href="data:file/csv;base64,{csv}">Download {filename}</a>
 """.format(
             csv=csv, filename=filename
+        ),
+        unsafe_allow_html=True,
+    )
+
+    #Get parameters from file
+def getParamFromFile(row,d:Parameters) -> Parameters:
+    return Parameters(
+    current_hospitalized=row["CURRENT_HOSPITALIZATIONS"],
+    hospitalized=Disposition(row["HOSPITALIATION_%_OF_TOTAL_INFECTIONS"], row["LENGTH_OF_STAY_(HOSP)"]),
+    icu=Disposition(row["ICU_%_OF_TOTAL_INFECTIONS"], row["LENGTH_OF_STAY_(ICU)"]),
+    relative_contact_rate=row["SOCIAL_DISTANCING"],
+    ventilated=Disposition(row["VENTILATED_%_OF_TOTAL_INFECTIONS"], row["LENGTH_OF_STAY_(VENTILATOR)"]),
+    current_date=d.current_date,
+    date_first_hospitalized=None,
+    doubling_time=row["DOUBLING_TIME"],
+    infectious_days=d.infectious_days,
+    market_share=row["HOSPITAL_MARKET_SHARE"],
+    max_y_axis=500,
+    n_days=row["NUMBER_OF_DAYS_TO_PROJECT"],
+    population=row["REGIONAL_POPULATION"],
+)
+
+def display_batch_download_link(st, filenameStr: str,xlsx_io  ):
+    # csv = dataframe_to_base64(df)
+    # xlsx_io = io.BytesIO()
+    # writer = pd.ExcelWriter(xlsx_io, engine='xlsxwriter')
+    # df.to_excel(writer, sheet_name=period)
+    # writer.save()
+    xlsx_io.seek(0)
+    # https://en.wikipedia.org/wiki/Data_URI_scheme
+    media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    data = base64.b64encode(xlsx_io.read()).decode("utf-8")
+    href_data_downloadable = f'data:{media_type};base64,{data}'
+    st.markdown(
+        """
+        <a download="{filename}"  href="{href_data_downloadable}" target="_blank">Download {filename}</a>
+""".format(
+            href_data_downloadable=href_data_downloadable,
+             filename=filenameStr
         ),
         unsafe_allow_html=True,
     )

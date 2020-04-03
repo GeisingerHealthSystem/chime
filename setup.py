@@ -31,7 +31,9 @@ setup(
         "dash_bootstrap_components",
         "pyyaml",
         "gunicorn",
-        "xlrd"
+        "xlrd",
+        "xlwt",
+        "xlsxwriter"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
