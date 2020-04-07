@@ -594,6 +594,10 @@ def display_download_link(st, filename: str, df: pd.DataFrame):
 
     #Get parameters from file
 def getParamFromFile(row,d:Parameters) -> Parameters:
+    if  row["DATE_FIRST_HOSPITALIZED"] is not None:
+    	row["DOUBLING_TIME"]=None
+    else:
+    	row["DATE_FIRST_HOSPITALIZED"]=None
     return Parameters(
     current_hospitalized=row["CURRENT_HOSPITALIZATIONS"],
     hospitalized=Disposition(row["HOSPITALIATION_%_OF_TOTAL_INFECTIONS"], row["LENGTH_OF_STAY_(HOSP)"]),
@@ -601,7 +605,7 @@ def getParamFromFile(row,d:Parameters) -> Parameters:
     relative_contact_rate=row["SOCIAL_DISTANCING"],
     ventilated=Disposition(row["VENTILATED_%_OF_TOTAL_INFECTIONS"], row["LENGTH_OF_STAY_(VENTILATOR)"]),
     current_date=d.current_date,
-    date_first_hospitalized=None,
+    date_first_hospitalized=row["DATE_FIRST_HOSPITALIZED"].to_pydatetime().date(),
     doubling_time=row["DOUBLING_TIME"],
     infectious_days=d.infectious_days,
     market_share=row["HOSPITAL_MARKET_SHARE"],
