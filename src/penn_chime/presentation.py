@@ -46,14 +46,14 @@ def display_header(st, m, p):
 <link rel="stylesheet" href="https://www1.pennmedicine.org/styles/shared/penn-medicine-header.css">
 <div class="penn-medicine-header__content">
     <a href="https://www.pennmedicine.org" class="penn-medicine-header__logo"
-        title="Go to the Penn Medicine home page">Penn Medicine</a>
-    <a id="title" class="penn-medicine-header__title">COVID-19 Hospital Impact Model for Epidemics (CHIME)</a>
+        title="Go to the Geisinger  home page">Geisinger</a>
+    <a id="title" class="penn-medicine-header__title">COVID-19 Hospital Impact Model for Epidemics (CHIME) for Geisinger</a>
 </div>
     """,
         unsafe_allow_html=True,
     )
     st.markdown(
-        """[Documentation]({docs_url}) | [Github](https://github.com/CodeForPhilly/chime/) |
+        """[Documentation]({docs_url}) | [Github](https://github.com/GeisingerHealthSystem/chime/) |
 [Slack](https://codeforphilly.org/chat?channel=covid19-chime-penn)""".format(
             docs_url=DOCS_URL
         )
@@ -62,6 +62,8 @@ def display_header(st, m, p):
         """*This tool was developed by the [Predictive Healthcare team](http://predictivehealthcare.pennmedicine.org/) at
     Penn Medicine to assist hospitals and public health officials with hospital capacity planning.*"""
     )
+    st.markdown("""Adapted by: **Debdipto Misra** & **Biplab Bhattacharya** """)
+    st.markdown("""Intro – this tool has been developed by the Predictive Healthcare team at Penn Medicine. We have adapted this tool to suit the needs of the Geisinger Health System. Please see version release notes below for changes that have been made to the tool""")
     st.markdown(
         """**Notice**: *There is a high 
     degree of uncertainty about the details of COVID-19 infection, transmission, and the effectiveness of social distancing 
