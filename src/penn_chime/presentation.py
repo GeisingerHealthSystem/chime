@@ -640,6 +640,7 @@ def display_sample_download_link(st):
     sample_filename = "sample_input.xlsx"
     sample_contents = io.open(sample_filename,'rb').read()
     data = base64.b64encode(sample_contents).decode("utf-8")
+    st.subheader("Sample Input File")
     st.markdown("Sample Input File Format is provided below.Please make sure the hospital & scenario label combination is unique for each row")
     df = pd.read_excel("sample_input.xlsx")
     xlsx_io_reader = io.BytesIO()
