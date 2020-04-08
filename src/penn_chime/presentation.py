@@ -63,7 +63,7 @@ def display_header(st, m, p):
     Penn Medicine to assist hospitals and public health officials with hospital capacity planning.*"""
     )
     st.markdown("""Adapted by: **Debdipto Misra** & **Biplab Bhattacharya** """)
-    st.markdown("""Intro – this tool has been developed by the Predictive Healthcare team at Penn Medicine. We have adapted this tool to suit the needs of the Geisinger Health System. Please see version release notes below for changes that have been made to the tool""")
+    st.markdown("""This tool has been developed by the Predictive Healthcare team at Penn Medicine. We have adapted this tool to suit the needs of the Geisinger Health System. Please see version release notes below for changes that have been made to the tool""")
     st.markdown(
         """**Notice**: *There is a high 
     degree of uncertainty about the details of COVID-19 infection, transmission, and the effectiveness of social distancing 
@@ -387,7 +387,7 @@ def display_sidebar(st, d: Parameters) -> Parameters:
 
     # Build in desired order
     st.sidebar.markdown(
-        """**CHIME [v1.1.2](https://github.com/CodeForPhilly/chime/releases/tag/v1.1.1) ({change_date})**""".format(
+        """**CHIME [vG-0.0.2-dev](https://github.com/GeisingerHealthSystem/chime) ({change_date})**""".format(
             change_date=CHANGE_DATE
         )
     )
