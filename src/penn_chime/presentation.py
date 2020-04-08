@@ -634,3 +634,23 @@ def display_batch_download_link(st, filenameStr: str,xlsx_io  ):
         ),
         unsafe_allow_html=True,
     )
+
+def display_sample_download_link(st):
+    #Sample Input File Download
+    sample_filename = "sample_input.xlsx"
+    sample_contents = io.open(sample_filename,'rb').read()
+    data = base64.b64encode(sample_contents).decode("utf-8")
+    st.markdown("Sample Input File Format is provided below.Please make sure the hospital & scenario label combination is unique for each row")
+    df = pd.read_excel("sample_input.xlsx")
+    xlsx_io_reader = io.BytesIO()
+    media_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    href_data_downloadable = f'data:{media_type};base64,{data}'
+    st.markdown(
+        """
+        <a download="{filename}"  href="{href_data_downloadable}" target="_blank">Download {filename}</a>
+    """.format(
+            href_data_downloadable=href_data_downloadable,
+             filename=sample_filename
+        ),
+        unsafe_allow_html=True,
+    )

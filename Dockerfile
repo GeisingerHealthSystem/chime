@@ -11,6 +11,6 @@ RUN mkdir src && pip install -q .
 COPY .streamlit .streamlit
 COPY settings.cfg .
 COPY src src
-
+COPY *.xlsx .
 CMD ["streamlit", "run", "src/app.py"]
 

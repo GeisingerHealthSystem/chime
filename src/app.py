@@ -14,7 +14,8 @@ from penn_chime.presentation import (
     write_definitions,
     write_footer,
     getParamFromFile,
-    display_batch_download_link
+    display_batch_download_link,
+    display_sample_download_link
 )
 from penn_chime.settings import get_defaults
 from penn_chime.models import SimSirModel
@@ -119,5 +120,6 @@ else:
             labels=p.labels)
         st.table(table_df)
 
+display_sample_download_link(st)
 write_definitions(st)
 write_footer(st)
