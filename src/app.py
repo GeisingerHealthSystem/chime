@@ -55,9 +55,10 @@ if uploaded_file:
         file_name_hosp=row["HOSPITAL_NAME"]
         scenario=row["SCENARIO_LABEL"]
         sheet_name=f"{file_name_hosp}_{scenario}_projected_admits"
-        # sheet1 = book.add_sheet(f"{file_name_hosp}_{scenario}_projected_admits")
-        batch_model.census_df.to_excel(excel_writer=writer,sheet_name=sheet_name)
-    writer.save()
+        modified_census_df = batch_model.census_df
+        modified_census_df["non-icu"] = batch_model.census_df.hospitalized - batch_model.census_df.icu
+        modified_census_df.to_excel(excel_writer=writer,sheet_name=sheet_name)
+        writer.save()
     display_batch_download_link(
         st,
         filenameStr=excel_filename,
