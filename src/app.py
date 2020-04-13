@@ -54,11 +54,17 @@ if uploaded_file:
         batch_model=SimSirModel(batch_param)
         file_name_hosp=row["HOSPITAL_NAME"]
         scenario=row["SCENARIO_LABEL"]
-        sheet_name=f"{file_name_hosp}_{scenario}_projected_census"
+        sheet_name=f"{file_name_hosp}_{scenario}_projected_admits"
         modified_census_df = batch_model.census_df
         modified_census_df["non-icu"] = batch_model.census_df.hospitalized - batch_model.census_df.icu
         new_order=["day","date","hospitalized","non-icu","icu","ventilated"]
-        modified_census_df.reindex(columns=new_order).to_excel(excel_writer=writer,sheet_name=sheet_name)
+        modified_census_df=modified_census_df.reindex(columns=new_order).add_prefix("census_")
+        admits_df = batch_model.admits_df.add_prefix("admits_")
+        admits_floor_df = batch_model.admits_floor_df.add_prefix("admits_floor_")
+        # .to_excel(excel_writer=writer,sheet_name=sheet_name)
+        # batch_model.admits_df.to_excel(excel_writer=writer,sheet_name=sheet_name)
+        # batch_model.admits_floor_df
+        output_df=pd.concat([modified_census_df,admits_df,admits_floor_df],axis=1).to_excel(excel_writer=writer,sheet_name=sheet_name)
     writer.save()
     display_batch_download_link(
         st,
