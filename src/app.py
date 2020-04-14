@@ -15,7 +15,7 @@ from penn_chime.presentation import (
     write_footer,
     getParamFromFile,
     display_batch_download_link,
-    display_sample_download_link
+    display_sample_download_link,
 )
 from penn_chime.settings import get_defaults
 from penn_chime.models import SimSirModel
