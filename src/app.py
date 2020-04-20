@@ -5,6 +5,7 @@ import streamlit as st  # type: ignore
 import pandas as pd
 import xlwt,xlsxwriter
 import io
+from shutil import make_archive
 from penn_chime.presentation import (
     display_download_link,
     display_header,
@@ -16,6 +17,7 @@ from penn_chime.presentation import (
     getParamFromFile,
     display_batch_download_link,
     display_sample_download_link,
+    display_zip_download_link,
 )
 from penn_chime.settings import get_defaults
 from penn_chime.models import SimSirModel
@@ -49,12 +51,14 @@ if uploaded_file:
     writer = pd.ExcelWriter(xlsx_io, engine='xlsxwriter')
     # book = xlwt.Workbook()
     # excelWriter = pd.ExcelWriter(excel_filename)
+    sheet_name_list = []
     for index, row in df.iterrows():
         batch_param=getParamFromFile(row,d)
         batch_model=SimSirModel(batch_param)
         file_name_hosp=row["HOSPITAL_NAME"]
         scenario=row["SCENARIO_LABEL"]
         sheet_name=f"{file_name_hosp}_{scenario}_projected_admits"
+        sheet_name_list.append(sheet_name)
         modified_census_df = batch_model.census_df
         modified_census_df["non-icu"] = batch_model.census_df.hospitalized - batch_model.census_df.icu
         new_order=["day","date","hospitalized","non-icu","icu","ventilated"]
@@ -64,12 +68,11 @@ if uploaded_file:
         # .to_excel(excel_writer=writer,sheet_name=sheet_name)
         # batch_model.admits_df.to_excel(excel_writer=writer,sheet_name=sheet_name)
         # batch_model.admits_floor_df
-        output_df=pd.concat([modified_census_df,admits_df,admits_floor_df],axis=1).to_excel(excel_writer=writer,sheet_name=sheet_name)
-    writer.save()
-    display_batch_download_link(
+        output_df=pd.concat([modified_census_df,admits_df,admits_floor_df],axis=1).to_csv(path_or_buf = "projections/" + sheet_name + ".csv",encoding='utf-8')
+    make_archive("all_projections","zip","projections")
+    display_zip_download_link(
         st,
-        filenameStr=excel_filename,
-        xlsx_io=xlsx_io,
+        filename="all_projections.zip",
         )
 else:
     if st.checkbox("Show more info about this tool"):

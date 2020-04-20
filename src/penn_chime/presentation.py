@@ -657,3 +657,20 @@ def display_sample_download_link(st):
         ),
         unsafe_allow_html=True,
     )
+
+
+def display_zip_download_link(st, filename: str ):
+    # https://en.wikipedia.org/wiki/Data_URI_scheme
+    media_type = 'application/octet-stream'
+    with open(filename, "rb") as f:
+        data = base64.b64encode(f.read()).decode("utf-8")
+    href_data_downloadable = f'data:{media_type};base64,{data}'
+    st.markdown(
+        """
+        <a download="{filename}"  href="{href_data_downloadable}" target="_blank">Download {filename}</a>
+    """.format(
+            href_data_downloadable=href_data_downloadable,
+             filename=filename
+        ),
+        unsafe_allow_html=True,
+    )
