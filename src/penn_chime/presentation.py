@@ -387,7 +387,7 @@ def display_sidebar(st, d: Parameters) -> Parameters:
 
     # Build in desired order
     st.sidebar.markdown(
-        """**CHIME [vG-0.0.2-dev](https://github.com/GeisingerHealthSystem/chime) ({change_date})**""".format(
+        """**CHIME [vG-0.0.4-dev](https://github.com/GeisingerHealthSystem/chime) ({change_date})**""".format(
             change_date=CHANGE_DATE
         )
     )
