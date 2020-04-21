@@ -55,12 +55,16 @@ if uploaded_file:
     # book = xlwt.Workbook()
     # excelWriter = pd.ExcelWriter(excel_filename)
     sheet_name_list = []
+    doubling_time_table=[]
     for index, row in df.iterrows():
+        dt_list=[]
         batch_param=getParamFromFile(row,d)
         batch_model=SimSirModel(batch_param)
         file_name_hosp=row["HOSPITAL_NAME"]
         scenario=row["SCENARIO_LABEL"]
         sheet_name=f"{file_name_hosp}_{scenario}_projected_admits"
+        dt_list = [file_name_hosp + "_" + scenario,batch_param.doubling_time]
+        doubling_time_table.append(dt_list)
         sheet_name_list.append(sheet_name)
         modified_census_df = batch_model.census_df
         modified_census_df["non-icu"] = batch_model.census_df.hospitalized - batch_model.census_df.icu
@@ -80,6 +84,7 @@ if uploaded_file:
         st,
         filename="all_projections.zip",
         )
+    st.write(pd.DataFrame(doubling_time_table,columns = ["Label","Doubling Time"]))
 else:
     if st.checkbox("Show more info about this tool"):
         notes = "The total size of the susceptible population will be the entire catchment area for our hospitals."
