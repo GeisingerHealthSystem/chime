@@ -29,7 +29,7 @@ from penn_chime.charts import (
     build_sim_sir_w_date_chart,
     build_table,
 )
-
+from penn_chime.constants import VERSION
 # This is somewhat dangerous:
 # Hide the main menu with "Rerun", "run on Save", "clear cache", and "record a screencast"
 # This should not be hidden in prod, but removed
@@ -71,7 +71,10 @@ if uploaded_file:
         # .to_excel(excel_writer=writer,sheet_name=sheet_name)
         # batch_model.admits_df.to_excel(excel_writer=writer,sheet_name=sheet_name)
         # batch_model.admits_floor_df
-        output_df=pd.concat([modified_census_df,admits_df,admits_floor_df],axis=1).to_csv(path_or_buf = "projections/" + sheet_name + ".csv",encoding='utf-8')
+        output_df=pd.concat([modified_census_df,admits_df,admits_floor_df],axis=1)
+        output_df["CHIME_version"] = VERSION
+        output_df["run_date"] = p.current_date
+        output_df.to_csv(path_or_buf = "projections/" + sheet_name + ".csv",encoding='utf-8') 
     make_archive("all_projections","zip","projections")
     display_zip_download_link(
         st,
