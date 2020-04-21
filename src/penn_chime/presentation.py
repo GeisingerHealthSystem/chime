@@ -599,14 +599,15 @@ def getParamFromFile(row,d:Parameters) -> Parameters:
         date_first_hospitalized=None
     else:
     	row["DOUBLING_TIME"]=None
-    print("Type =%s",type(date_first_hospitalized))
+    # print("Type =%s",type(date_first_hospitalized))
+    current_date_value = row["CURRENT_DATE"].to_pydatetime().date()
     return Parameters(
     current_hospitalized=row["CURRENT_HOSPITALIZATIONS"],
     hospitalized=Disposition(row["HOSPITALIATION_%_OF_TOTAL_INFECTIONS"], row["LENGTH_OF_STAY_(HOSP)"]),
     icu=Disposition(row["ICU_%_OF_TOTAL_INFECTIONS"], row["LENGTH_OF_STAY_(ICU)"]),
     relative_contact_rate=row["SOCIAL_DISTANCING"],
     ventilated=Disposition(row["VENTILATED_%_OF_TOTAL_INFECTIONS"], row["LENGTH_OF_STAY_(VENTILATOR)"]),
-    current_date=d.current_date,
+    current_date=current_date_value,
     date_first_hospitalized=date_first_hospitalized,
     doubling_time=row["DOUBLING_TIME"],
     infectious_days=d.infectious_days,
