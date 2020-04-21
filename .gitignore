@@ -28,4 +28,4 @@ devel.ipynb
 results/
 
 #log files
-.log
+*.log
