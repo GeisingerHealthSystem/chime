@@ -26,3 +26,6 @@ devel.ipynb
 
 # build artifacts
 results/
+
+#log files
+*.log

@@ -1,0 +1,39 @@
+diff a/src/app.py b/src/app.py	(rejected hunks)
+@@ -40,9 +41,11 @@ if st.checkbox("Show more info about this tool"):
+ 
+ st.subheader("New Admissions")
+ st.markdown("Projected number of **daily** COVID-19 admissions. \n\n _NOTE: Now including estimates of prior admissions for comparison._")
+-admits_chart = build_admits_chart(alt=alt, admits_df=m.admits_df, max_y_axis=p.max_y_axis)
++admits_chart = build_admits_chart(
++    alt=alt, admits_df=m.admits_df, max_y_axis=p.max_y_axis)
+ st.altair_chart(admits_chart, use_container_width=True)
+-st.markdown(build_descriptions(chart=admits_chart, labels=p.labels, suffix=" Admissions"))
++st.markdown(build_descriptions(chart=admits_chart,
++                               labels=p.labels, suffix=" Admissions"))
+ display_download_link(
+     st,
+     filename=f"{p.current_date}_projected_admits.csv",
+@@ -62,9 +65,11 @@ if st.checkbox("Show Projected Admissions in tabular form"):
+ 
+ st.subheader("Admitted Patients (Census)")
+ st.markdown("Projected **census** of COVID-19 patients, accounting for arrivals and discharges \n\n _NOTE: Now including estimates of prior census for comparison._")
+-census_chart = build_census_chart(alt=alt, census_df=m.census_df, max_y_axis=p.max_y_axis)
++census_chart = build_census_chart(
++    alt=alt, census_df=m.census_df, max_y_axis=p.max_y_axis)
+ st.altair_chart(census_chart, use_container_width=True)
+-st.markdown(build_descriptions(chart=census_chart, labels=p.labels, suffix=" Census"))
++st.markdown(build_descriptions(chart=census_chart,
++                               labels=p.labels, suffix=" Census"))
+ display_download_link(
+     st,
+     filename=f"{p.current_date}_projected_census.csv",
+@@ -84,7 +89,8 @@ if st.checkbox("Show Projected Census in tabular form"):
+ 
+ st.subheader("Susceptible, Infected, and Recovered")
+ st.markdown("The number of susceptible, infected, and recovered individuals in the hospital catchment region at any given moment")
+-sim_sir_w_date_chart = build_sim_sir_w_date_chart(alt=alt, sim_sir_w_date_df=m.sim_sir_w_date_df)
++sim_sir_w_date_chart = build_sim_sir_w_date_chart(
++    alt=alt, sim_sir_w_date_df=m.sim_sir_w_date_df)
+ st.altair_chart(sim_sir_w_date_chart, use_container_width=True)
+ display_download_link(
+     st,

@@ -85,6 +85,7 @@ class SimSirModel:
 
         elif p.date_first_hospitalized is not None and p.doubling_time is None:
             # Fitting spread parameter to observed hospital census (dates of 1 patient and today)
+            logger.info("Date First hospitalized = %s",p.date_first_hospitalized)
             self.i_day = (p.current_date - p.date_first_hospitalized).days
             logger.info(
                 'Using date_first_hospitalized: %s; current_date: %s; i_day: %s',
