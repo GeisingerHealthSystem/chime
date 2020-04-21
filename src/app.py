@@ -4,8 +4,9 @@ import altair as alt  # type: ignore
 import streamlit as st  # type: ignore
 import pandas as pd
 import xlwt,xlsxwriter
-import io
+import io,os
 from shutil import make_archive
+from pathlib import Path
 from penn_chime.presentation import (
     display_download_link,
     display_header,
@@ -44,6 +45,8 @@ display_header(st, m, p)
 #Upload file
 uploaded_file = st.file_uploader("Choose a XLSX file", type="xlsx")
 if uploaded_file:
+    for pth in Path(".").glob("projections/*.csv"):
+        pth.unlink()
     result=[]
     df=pd.read_excel(uploaded_file)
     excel_filename=f"{p.current_date}_projected_census.xlsx"
